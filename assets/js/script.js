@@ -1,40 +1,45 @@
-// Variable
-// 1. var = Old School --> variable bisa di declare ulang maupun write ulang
+// DOM Elements
+const tipeDriverEl = document.getElementById("tipe-driver"); // Get the element for driver type
+const tanggalEl = document.getElementById("tanggal"); // Get the element for date
+const waktuEl = document.getElementById("waktu"); // Get the element for time
+const jumlahPenumpangEl = document.getElementById("jumlah-penumpang"); // Get the element for number of passengers
+const cariMobilEl = document.getElementById("cari-mobil"); // Get the element for the search button
 
-var x = 0;
-// var x = 10;
-for (var i = 0; i <= 10; i++) {
-    x = x + 1;
-    console.log(x);
-};
-for (var i = 11;i >= 1; i--) {
-    x = x - 1;
-    console.log(x);
+const inputData = { // Initialize filter data object
+    tipeDriver: " ", // Store driver type
+    tanggal: " ", // Store date
+    waktu: " ", // Store time
+    jumlahPenumpang: " " // Store number of passengers
 }
-// Variable modern
-// 1. let --> variable tidak bisa di declare ulang tapi bisa write ulang
 
-let z = 10;
-z = 5
-console.log(z)
+// Event Listeners
+cariMobilEl.addEventListener("click", function(e) { // Add click event listener to the search button
+    inputData.tipeDriver = tipeDriverEl.value; // Update filter data with driver type
+    inputData.tanggal = tanggalEl.value; // Update filter data with date
+    inputData.waktu = waktuEl.value; // Update filter data with time
+    inputData.jumlahPenumpang = jumlahPenumpangEl.value; // Update filter data with number of passengers
+    getData(inputData);
+});
 
-// 2. const --> variable ridak bisa di declare ulang dan tidak bisa write ulang
-const y = 5;
-// y = 3;
-console.log(y)
+async function getData(inputData) {
+    let itemHtml;
+    const getCars = await fetch("https://api-car-rental.binaracademy.org/customer/car");
+    const result = await getCars.json();
+    const data = Binar.populateCars(result);
 
+    const filteredData = data.filter(function(e) {
+        return e.typeDriver === inputData.tipeDriver;
+    })
 
-// Aturan penamaan variable
-// let 0 = --> tidak boleh diawali pakai angka
-let z0 = 0;
-// let @ = --> tidak boleh menggunakan symbol kecuali _ dan $
-let _a = 0;
-let $a$ = 0;
-// let a* =
-let Z0 = 15 // variable Case Sensitive
+    filteredData.forEach(element => {
+    itemHtml += `<div class="col-4">
+        <img class="img-fluid"   src="${element.image}">
+        <h3>${element.name}</h3>
+        <p>${element.typeDriver}</p>
+        <p>${element.capacity}</p>
+        <p>${element.price}</p>
+    </div>`
+    })
+    document.getElementById("search-result").innerHTML = itemHtml;
+}
 
-// Aturan Penulisan Variable
-let isCarBroken = true;
-const COLOR_RED = "red";
-console.log(_a)
-  
